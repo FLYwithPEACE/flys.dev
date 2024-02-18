@@ -1,7 +1,6 @@
 version: "3.8"
 services:
     cadvisor:
-        container_name: cadvisor
         volumes:
             - /:/rootfs:ro
             - /var/run:/var/run:ro
