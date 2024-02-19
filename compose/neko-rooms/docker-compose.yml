@@ -10,5 +10,13 @@ services:
       - "/home/docker/neko-rooms/data:/data"
     ports:
       - 8081:8080
+    environment:
+      - NEKO_ROOMS_NEKO_IMAGES="
+          ghcr.io/m1k1o/neko/nvidia-firefox:latest
+          ghcr.io/m1k1o/neko/nvidia-chromium:latest
+          ghcr.io/m1k1o/neko/nvidia-google-chrome:latest
+          ghcr.io/m1k1o/neko/nvidia-microsoft-edge:latest
+          ghcr.io/m1k1o/neko/nvidia-brave:latest
+        "
 
 # Don't forget to include an .env file
