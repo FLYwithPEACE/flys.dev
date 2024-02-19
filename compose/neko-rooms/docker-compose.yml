@@ -1,0 +1,13 @@
+version: "3.5"
+
+  neko-rooms:
+    container_name: neko-rooms
+    image: "m1k1o/neko-rooms:latest"
+    restart: "unless-stopped"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "/home/docker/neko-rooms/data:/data"
+    ports:
+      - 8081:8080
+
+# Don't forget to include an .env file
