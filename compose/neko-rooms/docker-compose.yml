@@ -1,5 +1,6 @@
 version: "3.5"
 
+services:
   neko-rooms:
     container_name: neko-rooms
     image: "m1k1o/neko-rooms:latest"
