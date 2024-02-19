@@ -14,3 +14,4 @@ services:
         devices:
             - /dev/kmsg
         image: gcr.io/cadvisor/cadvisor:latest
+        restart: unless-stopped
