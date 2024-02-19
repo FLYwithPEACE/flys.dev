@@ -7,7 +7,11 @@ services:
     restart: "unless-stopped"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
-      - "/home/docker/neko-rooms/data:/data"
+      - type: bind
+        source: /home/docker/neko-rooms/data
+        target: /data
+        bind:
+          propagation: rshared
     ports:
       - 8081:8080
     environment:
