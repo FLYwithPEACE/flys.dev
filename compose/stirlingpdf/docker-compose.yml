@@ -1,0 +1,11 @@
+version: '3.3'
+services:
+  stirling-pdf:
+    container_name: stirling-pdf
+    image: frooodle/s-pdf:latest-ultra-lite
+    ports:
+      - '8084:8080'
+    volumes:
+      - /location/of/extraConfigs:/configs
+    environment:
+      - DOCKER_ENABLE_SECURITY=false
