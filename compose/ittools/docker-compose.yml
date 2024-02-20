@@ -1,0 +1,9 @@
+version: 3
+
+services:
+    it-tools:
+        container_name: it-tools
+        restart: unless-stopped
+        ports:
+            - 8083:80
+        image: corentinth/it-tools:latest
