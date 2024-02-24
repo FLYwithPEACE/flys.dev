@@ -8,8 +8,6 @@ services:
   neko-rooms:
     container_name: neko-rooms
     image: "m1k1o/neko-rooms:latest"
-    networks:
-      - neko-rooms-net
     ports:
       - 8081:8080 # Many services use port 8080, make sure to update
     volumes:
