@@ -9,9 +9,8 @@ services:
     volumes:
       - /home/docker/jellyseerr/config:/app/config
     environment:
-      - LOG_LEVEL=debug
-    env_file:
-      - stack.env
+      TZ: ${TZ:-Etc/UTC}
+      LOG_LEVEL: ${LOG_LEVEL:-debug}
     restart: unless-stopped
 
 # Don't forget to include an .env file

@@ -10,10 +10,10 @@ services:
       - /home/docker/jellyfin/config:/config
       - media:/data
     environment:
-      - TZ=America/New_York
-      - NVIDIA_VISIBLE_DEVICES=all # nvenc support
-    env_file:
-      - stack.env
+      TZ: ${TZ:-Etc/UTC}
+      NVIDIA_VISIBLE_DEVICES: all # nvenc support
+      PUID: ${PUID:-1000}
+      PGID: ${PGID:-1000}
     runtime: nvidia # nvenc support
     restart: unless-stopped
 

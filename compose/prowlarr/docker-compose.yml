@@ -8,8 +8,8 @@ services:
       - 9696:9696
     volumes:
       - /home/docker/prowlarr/config:/config
-    env_file:
-      - stack.env
+    environment:
+      TZ: ${TZ:-Etc/UTC}
     restart: unless-stopped
 
 # Don't forget to include an .env file

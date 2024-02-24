@@ -12,8 +12,9 @@ services:
     volumes:
       - '/home/docker/pihole/etc-pihole:/etc/pihole'
       - '/home/docker/pihole/etc-dnsmasq.d:/etc/dnsmasq.d'
-    env_file:
-      - stack.env
+    environment:
+      TZ: ${TZ:-Etc/UTC}
+      WEBPASSWORD: ${WEBPASSWORD:?You need to set a admin password}
     restart: unless-stopped
 
 # Don't forget to include an .env file

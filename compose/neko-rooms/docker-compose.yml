@@ -1,5 +1,4 @@
-version: "3.5"
-
+---
 networks:
   default:
     attachable: true
@@ -11,13 +10,22 @@ services:
     image: "m1k1o/neko-rooms:latest"
     networks:
       - neko-rooms-net
+    ports:
+      - 8081:8080 # Many services use port 8080, make sure to update
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "/home/docker/neko-rooms/data:/data"
-    env_file:
-      - stack.env
-    ports:
-      - 8081:8080 # Many services use port 8080, make sure to update
+    environment:
+      TZ: ${TZ:-Etc/UTC}
+      NEKO_ROOMS_NEKO_IMAGES: ghcr.io/m1k1o/neko/nvidia-chromium:latest ghcr.io/m1k1o/neko/nvidia-google-chrome:latest ghcr.io/m1k1o/neko/nvidia-microsoft-edge:latest ghcr.io/m1k1o/neko/nvidia-brave:latest
+      NEKO_ROOMS_MUX: true
+      NEKO_ROOMS_EPR: ${NEKO_ROOMS_EPR:-60000-60049}
+      NEKO_ROOMS_INSTANCE_NETWORK: neko-rooms-net
+      NEKO_ROOMS_TRAEFIK_ENABLED: false
+      NEKO_IPFETCH: http://checkip.amazonaws.com
+      NEKO_ROOMS_STORAGE_ENABLED: true
+      NEKO_ROOMS_STORAGE_INTERNAL: /data
+      NEKO_ROOMS_STORAGE_EXTERNAL: /home/docker/neko-rooms/data
     restart: "unless-stopped"
 
 # Don't forget to include an .env file
