@@ -1,11 +1,13 @@
-version: '3.3'
+---
 services:
   stirling-pdf:
     container_name: stirling-pdf
     image: frooodle/s-pdf:latest-ultra-lite
+    network_mode: 'bridge'
     ports:
-      - '8084:8080'
+      - '8084:8080' # Many services uses port 80, make sure to update
     volumes:
       - /home/docker/stirling-pdf/configs:/configs
     environment:
       - DOCKER_ENABLE_SECURITY=false
+    restart: unless-stopped

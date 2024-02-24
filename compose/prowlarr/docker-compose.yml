@@ -1,12 +1,13 @@
 ---
 services:
   prowlarr:
-    image: lscr.io/linuxserver/prowlarr:latest
     container_name: prowlarr
-    environment:
-      - TZ=America/New_York
-    volumes:
-      - /home/docker/prowlarr/config:/config
+    image: lscr.io/linuxserver/prowlarr:latest
+    network_mode: 'bridge'
     ports:
       - 9696:9696
+    volumes:
+      - /home/docker/prowlarr/config:/config
+    environment:
+      - TZ=America/New_York
     restart: unless-stopped

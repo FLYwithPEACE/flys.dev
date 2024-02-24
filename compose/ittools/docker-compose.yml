@@ -1,9 +1,10 @@
-version: '3.0'
-
+---
 services:
-    it-tools:
-        container_name: it-tools
-        restart: unless-stopped
-        ports:
-            - 8083:80
-        image: corentinth/it-tools:latest
+  it-tools:
+    container_name: it-tools
+    image: corentinth/it-tools:latest
+    network_mode: 'bridge'
+    ports:
+      - 8083:80 # Many services uses port 80, make sure to update
+    restart: unless-stopped
+      

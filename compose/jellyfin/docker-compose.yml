@@ -1,21 +1,24 @@
 ---
 services:
   jellyfin:
-    image: lscr.io/linuxserver/jellyfin:latest
     container_name: jellyfin
+    image: lscr.io/linuxserver/jellyfin:latest
     network_mode: 'bridge'
-    environment:
-      - TZ=America/New_York
-      - NVIDIA_VISIBLE_DEVICES=all # nvenc support
+    ports:
+      - 8096:8096
     volumes:
       - /home/docker/jellyfin/config:/config
       - media:/data
-    ports:
-      - 8096:8096
-    restart: unless-stopped
+    environment:
+      - TZ=America/New_York
+      - NVIDIA_VISIBLE_DEVICES=all # nvenc support
+    env_file:
+      - stack.env
     runtime: nvidia # nvenc support
-
+    restart: unless-stopped
 
 volumes:
   media:
-    external: True
+    external: True # Using volumes because media is shared on NFS
+
+# Don't forget to include an .env file
