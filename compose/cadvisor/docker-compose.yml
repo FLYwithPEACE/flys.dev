@@ -14,8 +14,8 @@ services:
       - /sys:/sys:ro
       - /home/docker/:/var/lib/docker:ro
       - /dev/disk/:/dev/disk:ro
-    env_file:
-      - stack.env
+    environment:
+      TZ: ${TZ:-Etc/UTC}
     privileged: true
     restart: unless-stopped
 
