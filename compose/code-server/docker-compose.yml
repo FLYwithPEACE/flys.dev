@@ -8,8 +8,9 @@ services:
       - 8443:8443
     volumes:
       - /home/docker/code-server/config:/config
-    env_file:
-      - stack.env
+    environment:
+      TZ: ${TZ:-Etc/UTC}
+      SUDO_PASSWORD: ${SUDO_PASSWORD:?sudo password required if you want to install packages}
     restart: unless-stopped
 
 # Don't forget to include an .env file
