@@ -1,15 +1,18 @@
 ---
-version: "2.1"
 services:
   flaresolverr:
+    container_name: flaresolverr
     # DockerHub mirror flaresolverr/flaresolverr:latest
     image: ghcr.io/flaresolverr/flaresolverr:latest
-    container_name: flaresolverr
+    network_mode: 'bridge'
+    ports:
+      - "${PORT:-8191}:8191"
     environment:
       - LOG_LEVEL=${LOG_LEVEL:-info}
       - LOG_HTML=${LOG_HTML:-false}
       - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
-      - TZ=America/New_York
-    ports:
-      - "${PORT:-8191}:8191"
+    env_file:
+      - stack.env
     restart: unless-stopped
+
+# Don't forget to include an .env file

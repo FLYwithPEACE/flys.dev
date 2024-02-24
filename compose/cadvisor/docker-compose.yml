@@ -1,17 +1,22 @@
-version: "3.8"
+---
 services:
-    cadvisor:
-        volumes:
-            - /:/rootfs:ro
-            - /var/run:/var/run:ro
-            - /sys:/sys:ro
-            - /home/docker/:/var/lib/docker:ro
-            - /dev/disk/:/dev/disk:ro
-        ports:
-            - 8080:8080
-        container_name: cadvisor
-        privileged: true
-        devices:
-            - /dev/kmsg
-        image: gcr.io/cadvisor/cadvisor:latest
-        restart: unless-stopped
+  cadvisor:
+    container_name: cadvisor
+    image: gcr.io/cadvisor/cadvisor:latest
+    network_mode: 'bridge'
+    ports:
+      - 8080:8080 # Many services uses port 8080, make sure to update
+    devices:
+      - /dev/kmsg
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /home/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    env_file:
+      - stack.env
+    privileged: true
+    restart: unless-stopped
+
+# Don't forget to include an .env file

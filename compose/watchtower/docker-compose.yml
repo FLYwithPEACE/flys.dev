@@ -1,8 +1,13 @@
-version: "3"
+---
 services:
   watchtower:
     container_name: watchtower
     image: containrrr/watchtower
+    network_mode: 'bridge'
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+    env_file:
+      - stack.env
     restart: unless-stopped
+
+# Don't forget to include an .env file

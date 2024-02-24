@@ -9,24 +9,15 @@ services:
   neko-rooms:
     container_name: neko-rooms
     image: "m1k1o/neko-rooms:latest"
-    restart: "unless-stopped"
+    networks:
+      - neko-rooms-net
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
-      - type: bind
-        source: /home/docker/neko-rooms/data
-        target: /data
-        bind:
-          propagation: rshared
+      - "/home/docker/neko-rooms/data:/data"
+    env_file:
+      - stack.env
     ports:
-      - 8081:8080
-    environment:
-      - "NEKO_ROOMS_NEKO_IMAGES=
-          ghcr.io/m1k1o/neko/nvidia-firefox:latest
-          ghcr.io/m1k1o/neko/nvidia-chromium:latest
-          ghcr.io/m1k1o/neko/nvidia-google-chrome:latest
-          ghcr.io/m1k1o/neko/nvidia-microsoft-edge:latest
-          ghcr.io/m1k1o/neko/nvidia-brave:latest
-        "
-      - "NEKO_ROOMS_INSTANCE_NETWORK=neko-rooms-net"
+      - 8081:8080 # Many services use port 8080, make sure to update
+    restart: "unless-stopped"
 
 # Don't forget to include an .env file
