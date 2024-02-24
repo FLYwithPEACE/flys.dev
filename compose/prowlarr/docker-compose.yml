@@ -8,6 +8,8 @@ services:
       - 9696:9696
     volumes:
       - /home/docker/prowlarr/config:/config
-    environment:
-      - TZ=America/New_York
+    env_file:
+      - stack.env
     restart: unless-stopped
+
+# Don't forget to include an .env file

@@ -12,4 +12,8 @@ services:
     volumes:
       - '/home/docker/pihole/etc-pihole:/etc/pihole'
       - '/home/docker/pihole/etc-dnsmasq.d:/etc/dnsmasq.d'
+    env_file:
+      - stack.env
     restart: unless-stopped
+
+# Don't forget to include an .env file
