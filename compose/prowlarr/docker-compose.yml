@@ -1,15 +1,33 @@
 ---
+networks:
+  default:
+    attachable: true
+    name: "prowlarr"
+
 services:
   prowlarr:
     container_name: prowlarr
     image: lscr.io/linuxserver/prowlarr:latest
-    network_mode: 'bridge'
     ports:
       - 9696:9696
     volumes:
       - /home/docker/prowlarr/config:/config
     environment:
       TZ: ${TZ:-Etc/UTC}
+    restart: unless-stopped
+  
+  flaresolverr:
+    container_name: flaresolverr
+    # DockerHub mirror flaresolverr/flaresolverr:latest
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    hostname: flaresolverr
+    # port:
+    #   - 8191:8191
+    environment:
+      TZ: ${TZ:-Etc/UTC}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      LOG_HTML: ${LOG_HTML:-false}
+      CAPTCHA_SOLVER: ${CAPTCHA_SOLVER:-none}
     restart: unless-stopped
 
 # Don't forget to include an .env file
