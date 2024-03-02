@@ -1,0 +1,20 @@
+---
+services:
+  onlyoffice:
+    container_name: onlyoffice
+    image: onlyoffice/documentserver
+    stdin_open: true
+    tty: true
+    network_mode: bridge
+    ports:
+      - 8085:80
+    volumes:
+      - /home/docker/onlyoffice/logs:/var/log/onlyoffice
+      - /home/docker/onlyoffice/data:/var/www/onlyoffice/Data
+      - /home/docker/onlyoffice/lib:/var/lib/onlyoffice
+      - /home/docker/onlyoffice/rabbitmq:/var/lib/rabbitmq
+      - /home/docker/onlyoffice/redis:/var/lib/redis
+      - /home/docker/onlyoffice/db:/var/lib/postgresql
+    environment:
+      TZ: ${TZ:-Etc/UTC}
+    restart: unless-stopped
