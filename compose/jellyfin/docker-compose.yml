@@ -8,6 +8,7 @@ services:
   jellyfin:
     container_name: jellyfin
     image: lscr.io/linuxserver/jellyfin:latest
+    hostname: jellyfin
     ports:
       - 8096:8096
     volumes:
@@ -24,7 +25,6 @@ services:
   jellyseerr:
     container_name: jellyseerr
     image: fallenbagel/jellyseerr:latest
-    hostname: jellyseerr
     ports:
       - 5055:5055
     volumes:
