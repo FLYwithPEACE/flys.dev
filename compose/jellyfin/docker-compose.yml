@@ -1,9 +1,13 @@
 ---
+networks:
+  default:
+    attachable: true
+    name: "jellyfin"
+
 services:
   jellyfin:
     container_name: jellyfin
     image: lscr.io/linuxserver/jellyfin:latest
-    network_mode: 'bridge'
     ports:
       - 8096:8096
     volumes:
@@ -15,6 +19,19 @@ services:
       PUID: ${PUID:-1000}
       PGID: ${PGID:-1000}
     runtime: nvidia # nvenc support
+    restart: unless-stopped
+  
+  jellyseerr:
+    container_name: jellyseerr
+    image: fallenbagel/jellyseerr:latest
+    hostname: jellyseerr
+    ports:
+      - 5055:5055
+    volumes:
+      - /home/docker/jellyseerr/config:/app/config
+    environment:
+      TZ: ${TZ:-Etc/UTC}
+      LOG_LEVEL: ${LOG_LEVEL:-debug}
     restart: unless-stopped
 
 volumes:
