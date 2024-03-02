@@ -1,0 +1,108 @@
+---
+networks:
+  default:
+    attachable: true
+    name: "monitor-net"
+
+services:
+  grafana:
+    container_name: grafana
+    image: grafana/grafana-oss
+    user: '0'
+    ports:
+      - 3000:3000
+    volumes:
+      - /home/docker/grafana/data:/var/lib/grafana
+    environment:
+      TZ: ${TZ:-Etc/UTC}
+    restart: unless-stopped
+      
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:latest
+    user: '0'
+    hostname: prometheus
+    ports:
+      - 9091:9090
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+    volumes:
+      - /home/docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - /home/docker/prometheus/data:/prometheus
+    environment:
+      TZ: ${TZ:-Etc/UTC}
+    restart: unless-stopped
+
+  node_exporter:
+    container_name: node_exporter
+    image: quay.io/prometheus/node-exporter:latest
+    hostname: node_exporter
+    command:
+      - --path.rootfs=/host
+    pid: host
+    volumes:
+      - /:/host:ro,rslave
+    environment:
+      TZ: ${TZ:-Etc/UTC}
+    restart: unless-stopped
+
+  graphite-exporter:
+    container_name: graphite_exporter
+    image: prom/graphite-exporter
+    hostname: graphite
+    ports:
+      - 9109:9109
+      - 9109:9109/udp
+    command: --graphite.mapping-config=/tmp/graphite_mapping.conf
+    volumes:
+      - /home/docker/prometheus/graphite_mapping.conf:/tmp/graphite_mapping.conf
+    environment:
+      TZ: ${TZ:-Etc/UTC}
+    restart: unless-stopped
+
+  cadvisor:
+    container_name: cadvisor
+    image: gcr.io/cadvisor/cadvisor:latest
+    hostname: cadvisor
+    devices:
+      - /dev/kmsg
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /home/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    environment:
+      TZ: ${TZ:-Etc/UTC}
+    privileged: true
+    restart: unless-stopped
+
+  nvidia_gpu_exporter:
+    container_name: nvidia_gpu_exporter
+    image: utkuozdemir/nvidia_gpu_exporter:1.1.0
+    hostname: nvidia_gpu
+    devices:
+        - /dev/nvidiactl:/dev/nvidiactl
+        - /dev/nvidia0:/dev/nvidia0
+    volumes:
+        - /usr/lib/x86_64-linux-gnu/libnvidia-ml.so:/usr/lib/x86_64-linux-gnu/libnvidia-ml.so
+        - /usr/lib/x86_64-linux-gnu/libnvidia-ml.so.1:/usr/lib/x86_64-linux-gnu/libnvidia-ml.so.1
+        - /usr/bin/nvidia-smi:/usr/bin/nvidia-smi
+    environment:
+      TZ: ${TZ:-Etc/UTC}
+    restart: unless-stopped
+
+  loki:
+    container_name: loki
+    image: grafana/loki:2.9.4
+    hostname: loki
+    ports:
+      - 3100:3100
+    command: 
+      --config.file=/mnt/config/loki-config.yaml
+      --config.expand-env=true
+    volumes:
+      - /home/docker/loki/config:/mnt/config
+    environment:
+      TZ: ${TZ:-Etc/UTC}
+    restart: unless-stopped
