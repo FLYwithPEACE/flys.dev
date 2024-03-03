@@ -7,7 +7,7 @@ networks:
 services:
   jellyfin:
     container_name: jellyfin
-    image: flywithpeace/jellyfin:latest
+    image: flywithpeace/jellyfin-sso:latest
     hostname: jellyfin
     ports:
       - 8096:8096
