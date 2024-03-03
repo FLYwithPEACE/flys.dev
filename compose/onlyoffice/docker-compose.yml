@@ -17,4 +17,5 @@ services:
       - /home/docker/onlyoffice/db:/var/lib/postgresql
     environment:
       TZ: ${TZ:-Etc/UTC}
+      JWT_SECRET: ${JWT_SECRET:?my_jwt_secret}
     restart: unless-stopped
