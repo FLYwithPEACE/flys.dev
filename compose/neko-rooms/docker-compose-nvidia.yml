@@ -11,8 +11,8 @@ services:
     ports:
       - 8081:8080 # Many services use port 8080, make sure to update
     volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
-      - "/home/docker/neko-rooms/data:/data"
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./data:/data # Must match NEKO_ROOMS_STORAGE_EXTERNAL
     environment:
       TZ: ${TZ:-Etc/UTC}
       NEKO_ROOMS_NEKO_IMAGES: ghcr.io/m1k1o/neko/nvidia-firefox:latest ghcr.io/m1k1o/neko/nvidia-chromium:latest ghcr.io/m1k1o/neko/nvidia-google-chrome:latest ghcr.io/m1k1o/neko/nvidia-microsoft-edge:latest ghcr.io/m1k1o/neko/nvidia-brave:latest
@@ -23,7 +23,7 @@ services:
       NEKO_IPFETCH: http://checkip.amazonaws.com
       NEKO_ROOMS_STORAGE_ENABLED: true
       NEKO_ROOMS_STORAGE_INTERNAL: /data
-      NEKO_ROOMS_STORAGE_EXTERNAL: /home/docker/neko-rooms/data
+      NEKO_ROOMS_STORAGE_EXTERNAL: ./data
     restart: "unless-stopped"
 
 # Don't forget to include an .env file
