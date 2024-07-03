@@ -1,0 +1,20 @@
+version: "3.7"
+services:
+  tailscale:
+    container_name: tailscaled
+    network_mode: bridge
+    image: tailscale/tailscale:latest
+    hostname: tailscale-docker
+    environment:
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_ROUTES=192.168.1.0/24
+    volumes:
+      - ./tailscale/state:/var/lib/tailscale
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - net_admin
+      - net_raw
+    privileged: true
+    restart: unless-stopped
+
+# Make sure you have access to shell to login into Tailscale
