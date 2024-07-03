@@ -51,8 +51,8 @@ services:
       AUTHENTIK_EMAIL__TIMEOUT: ${AUTHENTIK_EMAIL__TIMEOUT:-10}
       AUTHENTIK_EMAIL__FROM: ${AUTHENTIK_EMAIL__FROM:-authentik@domain}
     volumes:
-      - /home/docker/authentik/media:/media
-      - /home/docker/authentik/custom-templates:/templates
+      - ./authentik/media:/media
+      - ./authentik/custom-templates:/templates
     ports:
       - "${COMPOSE_PORT_HTTP:-9000}:9000"
       - "${COMPOSE_PORT_HTTPS:-9443}:9443"
@@ -82,9 +82,9 @@ services:
     user: root
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /home/docker/authentik/media:/media
-      - /home/docker/authentik/certs:/certs
-      - /home/docker/authentik/custom-templates:/templates
+      - ./authentik/media:/media
+      - ./authentik/certs:/certs
+      - ./authentik/custom-templates:/templates
     depends_on:
       - postgresql
       - redis
