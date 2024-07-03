@@ -1,0 +1,189 @@
+networks:
+  default:
+    attachable: true
+    name: servarr
+services:
+  radarr:
+    container_name: radarr
+    hostname: radarr
+    image: ghcr.io/hotio/radarr
+    ports:
+      - 7878:7878
+    volumes:
+      - ./radarr/config:/config
+      - ./media:/data
+    environment:
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
+      - UMASK=002
+      - TZ=${TZ:-Etc/UTC}
+    restart: unless-stopped
+  radarr-anime:
+    container_name: radarr-anime
+    hostname: radarr-anime
+    image: ghcr.io/hotio/radarr
+    ports:
+      - 7879:7878
+    volumes:
+      - ./radarr/config-anime:/config
+      - ./media:/data
+    environment:
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
+      - UMASK=002
+      - TZ=${TZ:-Etc/UTC}
+    restart: unless-stopped
+  #
+  sonarr:
+    container_name: sonarr
+    hostname: sonarr
+    image: ghcr.io/hotio/sonarr
+    ports:
+      - 8989:8989
+    volumes:
+      - ./sonarr/config:/config
+      - ./media:/data
+    environment:
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
+      - UMASK=002
+      - TZ=${TZ:-Etc/UTC}
+    restart: unless-stopped
+  #
+  lidarr:
+    container_name: lidarr
+    hostname: lidarr
+    image: ghcr.io/hotio/lidarr
+    ports:
+      - 8686:8686
+    volumes:
+      - ./lidarr/config:/config
+      - ./media:/data
+    environment:
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
+      - UMASK=002
+      - TZ=${TZ:-Etc/UTC}
+    restart: unless-stopped
+  #
+  readarr:
+    container_name: readarr
+    hostname: readarr
+    image: ghcr.io/hotio/readarr
+    ports:
+      - 8787:8787
+    volumes:
+      - ./readarr/config:/config
+      - ./media:/data
+    environment:
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
+      - UMASK=002
+      - TZ=${TZ:-Etc/UTC}
+    restart: unless-stopped
+  #
+  bazarr:
+    container_name: bazarr
+    hostname: bazarr
+    image: ghcr.io/hotio/bazarr
+    ports:
+      - 6767:6767
+    volumes:
+      - ./bazarr/config:/config
+      - ./media:/data
+    environment:
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
+      - UMASK=002
+      - WEBUI_PORTS=6767/tcp,6767/udp
+      - TZ=${TZ:-Etc/UTC}
+    restart: unless-stopped
+  #
+  bazarr-anime:
+    container_name: bazarr-anime
+    hostname: bazarr-anime
+    image: ghcr.io/hotio/bazarr
+    ports:
+      - 6768:6767
+    volumes:
+      - ./bazarr/config-anime:/config
+      - ./media:/data
+    environment:
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
+      - UMASK=002
+      - WEBUI_PORTS=6767/tcp,6767/udp
+      - TZ=${TZ:-Etc/UTC}
+    restart: unless-stopped
+  #
+  prowlarr:
+    container_name: prowlarr
+    image: ghcr.io/hotio/prowlarr
+    ports:
+      - 9696:9696
+    volumes:
+      - ./prowlarr/config:/config
+    environment:
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
+      - UMASK=002
+      - TZ=${TZ:-Etc/UTC}
+    restart: unless-stopped
+  #
+  flaresolverr:
+    container_name: flaresolverr
+    # DockerHub mirror flaresolverr/flaresolverr:latest
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    hostname: flaresolverr
+    # port:
+    #   - 8191:8191
+    environment:
+      TZ: ${TZ:-Etc/UTC}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      LOG_HTML: ${LOG_HTML:-false}
+      CAPTCHA_SOLVER: ${CAPTCHA_SOLVER:-none}
+    restart: unless-stopped
+  #
+  recyclarr:
+    image: ghcr.io/recyclarr/recyclarr
+    container_name: recyclarr
+    user: 1000:1000 # Match all other PUID/PGID
+    volumes:
+      - ./recyclarr/config:/config
+    environment:
+      - TZ=${TZ:-Etc/UTC}
+      - RECYCLARR_CREATE_CONFIG=true
+  #
+  jellyfin:
+    container_name: jellyfin
+    image: ghcr.io/hotio/jellyfin
+    hostname: jellyfin
+    ports:
+      - 8096:8096
+    volumes:
+      - ./jellyfin/config:/config
+      - ./media/media:/data/media
+    environment:
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
+      - UMASK=002
+      - TZ=${TZ:-Etc/UTC}
+    devices:
+      - /dev/dri/renderD128:/dev/dri/renderD128
+    restart: unless-stopped
+  #
+  jellyseerr:
+    container_name: jellyseerr
+    image: ghcr.io/hotio/jellyseerr
+    ports:
+      - 5055:5055
+    volumes:
+      - ./jellyseerr/config:/app/config
+    environment:
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
+      - UMASK=002
+      - TZ=${TZ:-Etc/UTC}
+      - LOG_LEVEL=${LOG_LEVEL:-debug}
+    restart: unless-stopped
+# Don't forget to include an .env file
