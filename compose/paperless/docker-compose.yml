@@ -1,0 +1,72 @@
+# sourced from paperless-ngx repository
+services:
+  broker:
+    container_name: paperless-redis
+    image: docker.io/library/redis:7
+    restart: unless-stopped
+    volumes:
+      - redis:/data
+  db:
+    container_name: paperless-db
+    image: docker.io/library/mariadb:11
+    restart: unless-stopped
+    volumes:
+      - mariadb:/var/lib/mysql
+    environment:
+      MARIADB_HOST: paperless
+      MARIADB_DATABASE: paperless
+      MARIADB_USER: ${MARIADB_USER:-paperless}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD:-paperless}
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD:-paperless}
+  webserver:
+    container_name: paperless
+    image: ghcr.io/paperless-ngx/paperless-ngx:latest
+    restart: unless-stopped
+    depends_on:
+      - db
+      - broker
+      - gotenberg
+      - tika
+    ports:
+      - 8086:8000
+    volumes:
+      - data:/usr/src/paperless/data
+      - media:/usr/src/paperless/media
+      - ./export:/usr/src/paperless/export
+      - ./consume:/usr/src/paperless/consume
+    environment:
+      PAPERLESS_REDIS: redis://broker:6379
+      PAPERLESS_DBENGINE: mariadb
+      PAPERLESS_DBHOST: db
+      #PAPERLESS_DBUSER: ${MARIADB_USER:-paperless}# only needed if non-default username
+      #PAPERLESS_DBPASS: ${MARIADB_PASSWORD:-paperless}# only needed if non-default password
+      PAPERLESS_DBPORT: 3306
+      PAPERLESS_TIKA_ENABLED: 1
+      PAPERLESS_TIKA_GOTENBERG_ENDPOINT: http://gotenberg:3000
+      PAPERLESS_TIKA_ENDPOINT: http://tika:9998
+      PAPERLESS_URL: ${PAPERLESS_URL:-https://paperless.tld}
+      PAPERLESS_SECRET_KEY: ${PAPERLESS_SECRET_KEY:?change me}
+      PAPERLESS_TIME_ZONE: ${PAPERLESS_TIME_ZONE:-Etc/UTC}
+      PAPERLESS_OCR_LANGUAGE: eng
+      PAPERLESS_OCR_LANGUAGES: esp chi-sim
+      PAPERLESS_TASK_WORKERS: 2
+      PAPERLESS_EMAIL_HOST: ${PAPERLESS_EMAIL_HOST:-smtp.tld}
+      PAPERLESS_EMAIL_PORT: ${PAPERLESS_EMAIL_PORT:-25}
+      PAPERLESS_EMAIL_HOST_USER: ${PAPERLESS_EMAIL_HOST_USER:-user@tld}
+      PAPERLESS_EMAIL_FROM: ${PAPERLESS_EMAIL_FROM:-paperless@tld}
+      PAPERLESS_EMAIL_HOST_PASSWORD: ${PAPERLESS_EMAIL_HOST_PASSWORD:-password}
+      PAPERLESS_EMAIL_USE_TLS: ${PAPERLESS_EMAIL_USE_TLS:-false}
+  gotenberg:
+    container_name: paperless-gotenberg
+    image: docker.io/gotenberg/gotenberg:8.7
+    restart: unless-stopped
+    # The gotenberg chromium route is used to convert .eml files. We do not
+    # want to allow external content like tracking pixels or even javascript.
+    command:
+      - gotenberg
+      - --chromium-disable-javascript=true
+      - --chromium-allow-list=file:///tmp/.*
+  tika:
+    container_name: paperless-tika
+    image: docker.io/apache/tika:latest
+    restart: unless-stopped
