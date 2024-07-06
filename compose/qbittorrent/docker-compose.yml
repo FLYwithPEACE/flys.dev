@@ -1,0 +1,17 @@
+services:
+  qbittorrent:
+    container_name: qbittorrent
+    image: ghcr.io/hotio/qbittorrent
+    network_mode: bridge
+    ports:
+      - 8087:8080
+      - 6881:6881
+    environment:
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
+      - UMASK=000
+      - TZ=${TZ:-Etc/UTC}
+      - WEBUI_PORTS=8080/tcp,8080/udp
+    volumes:
+      - ./config:/config
+      - ./torrents:/downloads
