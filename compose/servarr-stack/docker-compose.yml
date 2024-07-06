@@ -153,6 +153,7 @@ services:
     environment:
       - TZ=${TZ:-Etc/UTC}
       - RECYCLARR_CREATE_CONFIG=true
+    restart: unless-stopped
   #
   jellyfin:
     container_name: jellyfin
