@@ -9,7 +9,7 @@ services:
       - /mnt/data/immich/profile:/usr/src/app/upload/profile
       - /etc/localtime:/etc/localtime:ro
     devices:
-      - /dev/dri:/dev/dri # for Intel QSV support
+      - /dev/dri:/dev/dri
     ports:
       - 8088:3001
     depends_on:
@@ -21,6 +21,7 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
       REDIS_PASSWORD: ${REDIS_PASSWORD}
     restart: unless-stopped
+  #
   immich-machine-learning:
     container_name: immich_machine_learning
     image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-release}-openvino # for Intel OpenVINO support
@@ -36,7 +37,9 @@ services:
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
       REDIS_PASSWORD: ${REDIS_PASSWORD}
+      MACHINE_LEARNING_WORKERS: 1
     restart: unless-stopped
+  #
   redis:
     container_name: immich_redis
     image: docker.io/bitnami/redis:7.0.11
@@ -45,6 +48,7 @@ services:
     environment:
       REDIS_PASSWORD: ${REDIS_PASSWORD}
     restart: unless-stopped
+  #
   database:
     container_name: immich_postgres
     image: docker.io/tensorchord/pgvecto-rs:pg15-v0.2.0
