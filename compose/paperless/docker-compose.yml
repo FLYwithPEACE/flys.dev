@@ -1,17 +1,16 @@
-# sourced from paperless-ngx repository
 services:
   broker:
     container_name: paperless-redis
     image: docker.io/library/redis:7
     restart: unless-stopped
     volumes:
-      - redis:/data
+      - ./data/paperless/redis:/data
   db:
     container_name: paperless-db
     image: docker.io/library/mariadb:11
     restart: unless-stopped
     volumes:
-      - mariadb:/var/lib/mysql
+      - ./data/paperless/mariadb:/var/lib/mysql
     environment:
       MARIADB_HOST: paperless
       MARIADB_DATABASE: paperless
@@ -30,16 +29,16 @@ services:
     ports:
       - 8086:8000
     volumes:
-      - data:/usr/src/paperless/data
-      - media:/usr/src/paperless/media
-      - ./export:/usr/src/paperless/export
-      - ./consume:/usr/src/paperless/consume
+      - ./data/paperless/data:/usr/src/paperless/data
+      - ./data/paperless/media:/usr/src/paperless/media
+      - ./data/paperless/export:/usr/src/paperless/export
+      - ./data/paperless/consume:/usr/src/paperless/consume
     environment:
       PAPERLESS_REDIS: redis://broker:6379
       PAPERLESS_DBENGINE: mariadb
       PAPERLESS_DBHOST: db
-      #PAPERLESS_DBUSER: ${MARIADB_USER:-paperless}# only needed if non-default username
-      #PAPERLESS_DBPASS: ${MARIADB_PASSWORD:-paperless}# only needed if non-default password
+      #      PAPERLESS_DBUSER: ${MARIADB_USER:-paperless}# only needed if non-default username
+      #      PAPERLESS_DBPASS: ${MARIADB_PASSWORD:-paperless}# only needed if non-default password
       PAPERLESS_DBPORT: 3306
       PAPERLESS_TIKA_ENABLED: 1
       PAPERLESS_TIKA_GOTENBERG_ENDPOINT: http://gotenberg:3000
@@ -56,6 +55,7 @@ services:
       PAPERLESS_EMAIL_FROM: ${PAPERLESS_EMAIL_FROM:-paperless@tld}
       PAPERLESS_EMAIL_HOST_PASSWORD: ${PAPERLESS_EMAIL_HOST_PASSWORD:-password}
       PAPERLESS_EMAIL_USE_TLS: ${PAPERLESS_EMAIL_USE_TLS:-false}
+      PAPERLESS_APPS: allauth.socialaccount.providers.openid_connect
   gotenberg:
     container_name: paperless-gotenberg
     image: docker.io/gotenberg/gotenberg:8.7

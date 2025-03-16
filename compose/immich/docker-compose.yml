@@ -3,15 +3,15 @@ services:
     container_name: immich_server
     image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
     volumes:
-      - /mnt/data/immich/upload:/usr/src/app/upload
-      - /mnt/data/immich/thumbs:/usr/src/app/upload/thumbs
-      - /mnt/data/immich/video:/usr/src/app/upload/encoded-video
-      - /mnt/data/immich/profile:/usr/src/app/upload/profile
+      - ./data/immich/upload:/usr/src/app/upload
+      - ./data/immich/thumbs:/usr/src/app/upload/thumbs
+      - ./data/immich/video:/usr/src/app/upload/encoded-video
+      - ./data/immich/profile:/usr/src/app/upload/profile
       - /etc/localtime:/etc/localtime:ro
     devices:
       - /dev/dri:/dev/dri
     ports:
-      - 8088:3001
+      - 8088:2283
     depends_on:
       - redis
       - database
@@ -30,7 +30,7 @@ services:
     devices:
       - /dev/dri:/dev/dri
     volumes:
-      - /mnt/data/immich/cache:/cache
+      - ./data/immich/cache:/cache
       - /dev/bus/usb:/dev/bus/usb
     environment:
       DB_DATABASE_NAME: ${DB_DATABASE_NAME}
@@ -58,7 +58,7 @@ services:
       POSTGRES_DB: ${DB_DATABASE_NAME}
       POSTGRES_INITDB_ARGS: --data-checksums
     volumes:
-      - /mnt/data/immich/db:/var/lib/postgresql/data
+      - ./data/immich/db:/var/lib/postgresql/data
     healthcheck:
       test: pg_isready --dbname='${DB_DATABASE_NAME}' --username='${DB_USERNAME}' ||
         exit 1; Chksum="$$(psql --dbname='${DB_DATABASE_NAME}'
