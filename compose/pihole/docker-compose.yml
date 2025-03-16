@@ -10,8 +10,8 @@ services:
       - "67:67/udp"
       - "8082:80/tcp" # Many services uses port 80, make sure to update
     volumes:
-      - './pihole/etc-pihole:/etc/pihole'
-      - './pihole/etc-dnsmasq.d:/etc/dnsmasq.d'
+      - ./data/pihole/etc-pihole:/etc/pihole
+      - ./data/pihole/etc-dnsmasq.d:/etc/dnsmasq.d
     environment:
       TZ: ${TZ:-Etc/UTC}
       WEBPASSWORD: ${WEBPASSWORD:?You need to set a admin password}

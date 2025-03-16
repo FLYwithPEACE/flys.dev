@@ -13,5 +13,6 @@ services:
       - TZ=${TZ:-Etc/UTC}
       - WEBUI_PORTS=8080/tcp,8080/udp
     volumes:
-      - ./config:/config
+      - ./data/qbittorrent/config:/config
       - ./torrents:/downloads
+    restart: unless-stopped

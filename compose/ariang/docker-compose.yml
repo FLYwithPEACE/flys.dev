@@ -1,0 +1,14 @@
+services:
+  ariang:
+    image: hurlenko/aria2-ariang
+    ports:
+      - 8091:8080
+    volumes:
+      - ./downloads:/aria2/data
+      - ./data/ariang/conf:/aria2/conf
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - RPC_SECRET= ${RPC_SECRET:?Provide a secrete token}
+      - ARIA2RPCPORT=8091
+    restart: always
